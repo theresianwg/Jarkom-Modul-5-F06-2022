@@ -30,12 +30,12 @@ Pada modul 5 ini, kami menggunakan perhitungan dengan metode VLSM
   <img src="img/label.png" width="600">
 </p><br>
 
-### Pada pembagian ini, terdapat 8 subnet dimulai dari A1-A8. Selanjutnya, kita dapat menentukan jumlah IP yang dibutuhkan pada setiap subnet.
+### Pada pembagian ini, terdapat 8 subnet dimulai dari A1-A8. Selanjutnya, kita dapat melakukan pembagian seperti tabel dibawah ini
 <p align="center">
   <img src="img/penentuan.png" width="600">
 </p><br>
 
-### Selanjutnya, menghitung pembagian IP dengan membuat tree.
+### Selanjutnya, mengitung pembagian IP dengan membuat tree.
 <p align="center">
   <img src="img/pohon.png" width="600">
 </p><br>
