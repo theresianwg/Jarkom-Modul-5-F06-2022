@@ -13,7 +13,8 @@
   <img src="img/topologi.png" width="600">
 </p><br>
 
-## Keterangan :	Eden adalah DNS Server
+## Keterangan :	
+- Eden adalah DNS Server
 - WISE adalah DHCP Server
 - Garden dan SSS adalah Web Server
 - Jumlah Host pada Forger adalah 62 host
@@ -28,14 +29,13 @@ Pada modul 5 ini, kami menggunakan perhitungan dengan metode VLSM
 <p align="center">
   <img src="img/label.png" width="600">
 </p><br>
-Pada pembagian ini, terdapat 8 subnet dimulai dari A1-A8. Selanjutnya, kita dapat melakukan pembagian seperti tabel dibawah ini
-<br>
 
+### Pada pembagian ini, terdapat 8 subnet dimulai dari A1-A8. Selanjutnya, kita dapat melakukan pembagian seperti tabel dibawah ini
 <p align="center">
   <img src="img/perhitungan.png" width="600">
 </p><br>
-Selanjutnya, mengitung pembagian IP dengan membuat tree.
 
+### Selanjutnya, mengitung pembagian IP dengan membuat tree.
 <p align="center">
   <img src="img/pohon.png" width="600">
 </p><br>
