@@ -303,11 +303,22 @@ testing: ping IP Web Server (192.202.0.18 atau 192.202.0.19) pada hari dan jam A
 ## Karena kita memiliki 2 Web Server, Loid ingin Ostania diatur sehingga setiap request dari client yang mengakses Garden dengan port 80 akan didistribusikan secara bergantian pada SSS dan Garden secara berurutan dan request dari client yang mengakses SSS dengan port 443 akan didistribusikan secara bergantian pada Garden dan SSS secara berurutan.
 
 ### Jawab :
+Pada soal ini diminta untuk mendistribusikan secara bergantian pada SSS dan Garden, maka dari itu disini kita dapat menggunakan `--dport`. Dan juga, dapat membatasi dengan menggunakan `--every 2` dan `--to-destination` mengarahkan distribusinya ke node lain
+```
+iptables -A PREROUTING -t nat -p tcp --dport 80 -d 192.202.0.18 -m statistic --mode nth --every 2 --packet 0 -j DNAT --to-destination 192.202.0.18:80
+iptables -A PREROUTING -t nat -p tcp --dport 80 -d 192.202.0.18 -j DNAT --to-destination 192.202.0.19:80
+iptables -A PREROUTING -t nat -p tcp --dport 443 -d 192.202.0.19 -m statistic --mode nth --every 2 --packet 0 -j DNAT --to-destination 192.202.0.19:443
+iptables -A PREROUTING -t nat -p tcp --dport 443 -d 192.202.0.19 -j DNAT --to-destination 192.202.0.18:443
+```
+
 
 # SOAL 6
 ## Karena Loid ingin tau paket apa saja yang di-drop, maka di setiap node server dan router ditambahkan logging paket yang di-drop dengan standard syslog level.
 
 ### Jawab :
+
+## Kendala :
+- Soal no 5 tidak dapat menyambungkan curl saat testing
 
 
 
