@@ -291,6 +291,15 @@ Pada soal ini limit maksimal untuk mengakses koneksi secara bersamaan ialah 2, m
 ``` iptables -A INPUT -p icmp -m connlimit --connlimit-above 2 --connlimit-mask 0 -j DROP ```
 
 testing: lakukan ping DNS Server (192.202.0.10) atau DHCP Server (192.202.0.11) pada tiap client, apabila 2 client terakhir tidak mendapatkan response, maka limit berhasil
+<p align="center">
+  <img src="img/3-ya.png" width="600">
+</p><br>
+<p align="center">
+  <img src="img/3-yaa.png" width="600">
+</p><br>
+<p align="center">
+  <img src="img/3-tidak.png" width="600">
+</p><br>
 
 # SOAL 4
 ## Akses menuju Web Server hanya diperbolehkan disaat jam kerja yaitu Senin sampai Jumat pada pukul 07.00 - 16.00.
