@@ -261,6 +261,11 @@ Pada soal ini diminta untuk tidak menggunakan MASQUERADE, maka dari itu kita dap
 
 ``` iptables -t nat -A POSTROUTING -o eth0 -j SNAT -s 192.202.0.0/21 --to-source 192.168.122.2 ```
 
+testing: lakukan ping google.com pada setiap node, atau apt-get update & install pada node selain client
+<p align="center">
+  <img src="img/nomor1.png" width="600">
+</p><br>
+
 # SOAL 2
 ## Kalian diminta untuk melakukan drop semua TCP dan UDP dari luar Topologi kalian pada server yang merupakan DHCP Server demi menjaga keamanan.
 
@@ -271,6 +276,11 @@ Karena Wise merupakan DHCP Server dan semua pada TCP dan UDP di drop. kita dapat
 iptables -A INPUT -p tcp -j REJECT
 iptables -A INPUT -p udp -j REJECT
 ```
+
+testing: lakukan apt-get update, apabila terjadi error, maka drop packet berhasil
+<p align="center">
+  <img src="img/nomor2.png" width="600">
+</p><br>
 
 # SOAL 3
 ## Loid meminta kalian untuk membatasi DHCP dan DNS Server hanya boleh menerima maksimal 2 koneksi ICMP secara bersamaan menggunakan iptables, selebihnya didrop.
@@ -292,6 +302,11 @@ Karena akses menuju web server hanya pada saat jam kerja, maka dari itu kita dap
 iptables -A INPUT -m time --timestart 07:00 --timestop 16:00 --weekdays Mon,Tue,Wed,Thu,Fri -j ACCEPT
 iptables -A INPUT -j REJECT
 ```
+
+testing: ping IP Web Server (192.202.0.18 atau 192.202.0.19) pada hari dan jam ACCEPT dan oada hari dan jam REJECT
+<p align="center">
+  <img src="img/nomor4.png" width="600">
+</p><br>
 
 # SOAL 5
 ## Karena kita memiliki 2 Web Server, Loid ingin Ostania diatur sehingga setiap request dari client yang mengakses Garden dengan port 80 akan didistribusikan secara bergantian pada SSS dan Garden secara berurutan dan request dari client yang mengakses SSS dengan port 443 akan didistribusikan secara bergantian pada Garden dan SSS secara berurutan.
