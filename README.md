@@ -181,6 +181,8 @@ route add -net 0.0.0.0 netmask 0.0.0.0 gw 192.202.0.1
 ```
 route add -net 0.0.0.0 netmask 0.0.0.0 gw 192.202.0.5
 ```
+# (D) SETTING RELAY & DHCP SERVER
+
 ## SETTING RELAY
 Pada Ostania dan Westalis akan ditambahkan konfigurasi seperti dibawah ini
 
@@ -235,6 +237,56 @@ subnet 192.202.1.0 netmask 255.255.255.0 {
     max-lease-time 7200;
 }
 ```
+
+# SOAL 1
+## Agar topologi yang kalian buat dapat mengakses keluar, kalian diminta untuk mengkonfigurasi Strix menggunakan iptables, tetapi Loid tidak ingin menggunakan MASQUERADE.
+
+### Jawab :
+Pada soal ini diminta untuk tidak menggunakan MASQUERADE, maka dari itu kita dapat menggunakan ```SNAT``` pada STRIX seperti dibawah ini
+
+``` iptables -t nat -A POSTROUTING -o eth0 -j SNAT -s 192.202.0.0/21 --to-source 192.168.122.2 ```
+
+# SOAL 2
+## Kalian diminta untuk melakukan drop semua TCP dan UDP dari luar Topologi kalian pada server yang merupakan DHCP Server demi menjaga keamanan.
+
+### Jawab :
+Karena Wise merupakan DHCP Server, dan semua pada TCP dan UDP di drop. kita dapat menambahkan syntax iptables seperti dibawah ini
+
+```
+iptables -A INPUT -p tcp -j REJECT
+iptables -A INPUT -p udp -j REJECT
+```
+
+# SOAL 3
+## Loid meminta kalian untuk membatasi DHCP dan DNS Server hanya boleh menerima maksimal 2 koneksi ICMP secara bersamaan menggunakan iptables, selebihnya didrop.
+
+### Jawab :
+Pada soal ini limit maksimal untuk mengakses koneksi secara bersamaan ialah 2, maka dari itu kita dapat menggunakan `--connlimit-above 2` dan agar selain 2 koneksi ditolak dapat menggunakan `DROP`, seperti dibawah ini
+
+``` iptables -A INPUT -p icmp -m connlimit --connlimit-above 2 --connlimit-mask 0 -j DROP ```
+
+# SOAL 4
+## Akses menuju Web Server hanya diperbolehkan disaat jam kerja yaitu Senin sampai Jumat pada pukul 07.00 - 16.00.
+
+### Jawab :
+Karena akses menuju web server hanya pada saat jam kerja, maka dari itu kita dapat menggunakan `--timestart 07:00` untuk memulai dan `--timestop 16:00` untuk mengakhiri. Dan juga kita dapat membatasi hari dengan menggunakan `--weekdays`. Untuk menentukan bisa tidak nya web server diakses menggunakan `ACCEPT` dan `REJECT`, seperti dibawah ini
+
+```
+iptables -A INPUT -m time --timestart 07:00 --timestop 16:00 --weekdays Mon,Tue,Wed,Thu,Fri -j ACCEPT
+iptables -A INPUT -j REJECT
+```
+
+# SOAL 5
+## Karena kita memiliki 2 Web Server, Loid ingin Ostania diatur sehingga setiap request dari client yang mengakses Garden dengan port 80 akan didistribusikan secara bergantian pada SSS dan Garden secara berurutan dan request dari client yang mengakses SSS dengan port 443 akan didistribusikan secara bergantian pada Garden dan SSS secara berurutan.
+
+### Jawab :
+
+# SOAL 6
+## Karena Loid ingin tau paket apa saja yang di-drop, maka di setiap node server dan router ditambahkan logging paket yang di-drop dengan standard syslog level.
+
+### Jawab :
+
+
 
 
 
