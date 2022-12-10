@@ -22,30 +22,49 @@
 - Jumlah Host pada Blackbell adalah 255 host
 - Jumlah Host pada Briar adalah 200 host
 
-# (B) Teknik VLSM
-Pada modul 5 ini, kami menggunakan perhitungan dengan metode VLSM
+### DNS Server:
+```
+apt-get update
+apt-get install bind9 -y
+```
 
-## Subnetting 
+### Wise:
+```
+apt-get update
+apt-get install isc-dhcp-server -y
+```
+
+### Garden & SSS:
+```
+apt-get update
+apt-get install apache2
+```
+
+# (B) Subnetting
+## Untuk menjaga perdamaian dunia, Loid ingin meminta kalian untuk membuat topologi tersebut menggunakan teknik CIDR atau VLSM setelah melakukan subnetting.
+
+### Jawab
+Pada modul 5 ini, kami menggunakan perhitungan dengan metode VLSM
 <p align="center">
   <img src="img/label.png" width="600">
 </p><br>
 
-### Pada pembagian ini, terdapat 8 subnet dimulai dari A1-A8. Selanjutnya, kita dapat melakukan pembagian seperti tabel dibawah ini
+Pada pembagian ini, terdapat 8 subnet dimulai dari A1-A8. Selanjutnya, kita dapat melakukan pembagian seperti tabel dibawah ini
 <p align="center">
   <img src="img/penentuan.png" width="600">
 </p><br>
 
-### Selanjutnya, mengitung pembagian IP dengan membuat tree.
+Selanjutnya, mengitung pembagian IP dengan membuat tree.
 <p align="center">
   <img src="img/pohon.png" width="600">
 </p><br>
 
-### Hasil pembagian IP
+Hasil pembagian IP
 <p align="center">
   <img src="img/perhitungan.png" width="600">
 </p><br>
 
-## Konfigurasi
+### Konfigurasi
 - Strix 
 ```
 auto eth0
@@ -148,14 +167,16 @@ iface eth0 inet static
 	gateway 192.202.0.17
 ```
 
-- Blackbell, Briar, Desmon, Forger
+- Blackbell, Briar, Desmond, Forger
 ```
 auto eth0
 iface eth0 inet dhcp
 ```
 
 # (C) ROUTING
+## Anya, putri pertama Loid, juga berpesan kepada anda agar melakukan Routing agar setiap perangkat pada jaringan tersebut dapat terhubung.
 
+### Jawab
 - Strix
 ```
 #A1 to Westalis
@@ -172,23 +193,17 @@ route add -net 192.202.2.0 netmask 255.255.254.0 gw 192.202.0.6
 route add -net 192.202.1.0 netmask 255.255.255.0 gw 192.202.0.6
 ```
 
-- Westalis
-```
-route add -net 0.0.0.0 netmask 0.0.0.0 gw 192.202.0.1
-```
-
-- Ostania
-```
-route add -net 0.0.0.0 netmask 0.0.0.0 gw 192.202.0.5
-```
 # (D) SETTING RELAY & DHCP SERVER
+## 
+Tugas berikutnya adalah memberikan ip pada subnet Forger, Desmond, Blackbell, dan Briar secara dinamis menggunakan bantuan DHCP server. Kemudian kalian ingat bahwa kalian harus setting DHCP Relay pada router yang menghubungkannya.
 
-## SETTING RELAY
-Pada Ostania dan Westalis akan ditambahkan konfigurasi seperti dibawah ini
+### Jawab
+### DHCP RELAY
+Pada setiap Router (Strix, Ostania, Westalis), buka ``/etc/default/isc-dhcp-relay``, tambahkan konfigurasi seperti dibawah ini:
 
 ```
 # What servers should the DHCP relay forward requests to?
-SERVERS="192.202.0.11"
+SERVERS="192.202.0.11" # IP WISE
 
 # On what interfaces should the DHCP relay (dhrelay) serve DHCP requests?
 INTERFACES="eth0 eth1 eth2 eth3"
@@ -197,7 +212,7 @@ INTERFACES="eth0 eth1 eth2 eth3"
 OPTIONS=""
 ```
 
-## SETTING DHCP SERVER
+### DHCP SERVER
 Pada Wise akan ditambahkan konfigurasi seperti dibawah ini
 ```
 subnet 192.202.0.128 netmask 255.255.255.128 {
@@ -246,35 +261,43 @@ Pada soal ini diminta untuk tidak menggunakan MASQUERADE, maka dari itu kita dap
 
 ``` iptables -t nat -A POSTROUTING -o eth0 -j SNAT -s 192.202.0.0/21 --to-source 192.168.122.2 ```
 
+testing: lakukan ping google.com pada setiap node, atau apt-get update & install pada node selain client
+
 # SOAL 2
 ## Kalian diminta untuk melakukan drop semua TCP dan UDP dari luar Topologi kalian pada server yang merupakan DHCP Server demi menjaga keamanan.
 
 ### Jawab :
-Karena Wise merupakan DHCP Server, dan semua pada TCP dan UDP di drop. kita dapat menambahkan syntax iptables seperti dibawah ini
+Karena Wise merupakan DHCP Server dan semua pada TCP dan UDP di drop. kita dapat menambahkan syntax iptables pada WISE seperti dibawah ini
 
 ```
 iptables -A INPUT -p tcp -j REJECT
 iptables -A INPUT -p udp -j REJECT
 ```
 
+testing: lakukan apt-get update, apabila terjadi error, maka drop packet berhasil
+
 # SOAL 3
 ## Loid meminta kalian untuk membatasi DHCP dan DNS Server hanya boleh menerima maksimal 2 koneksi ICMP secara bersamaan menggunakan iptables, selebihnya didrop.
 
 ### Jawab :
-Pada soal ini limit maksimal untuk mengakses koneksi secara bersamaan ialah 2, maka dari itu kita dapat menggunakan `--connlimit-above 2` dan agar selain 2 koneksi ditolak dapat menggunakan `DROP`, seperti dibawah ini
+Pada soal ini limit maksimal untuk mengakses koneksi secara bersamaan ialah 2, maka dari itu kita dapat menggunakan `--connlimit-above 2` dan agar selain 2 koneksi ditolak dapat menggunakan `DROP`, maka tambahkan syntax seperti dibawah ini pada WISE (DHCP Server) dan Eden (DNS Server):
 
 ``` iptables -A INPUT -p icmp -m connlimit --connlimit-above 2 --connlimit-mask 0 -j DROP ```
+
+testing: lakukan ping DNS Server (192.202.0.10) atau DHCP Server (192.202.0.11) pada tiap client, apabila 2 client terakhir tidak mendapatkan response, maka limit berhasil
 
 # SOAL 4
 ## Akses menuju Web Server hanya diperbolehkan disaat jam kerja yaitu Senin sampai Jumat pada pukul 07.00 - 16.00.
 
 ### Jawab :
-Karena akses menuju web server hanya pada saat jam kerja, maka dari itu kita dapat menggunakan `--timestart 07:00` untuk memulai dan `--timestop 16:00` untuk mengakhiri. Dan juga kita dapat membatasi hari dengan menggunakan `--weekdays`. Untuk menentukan bisa tidak nya web server diakses menggunakan `ACCEPT` dan `REJECT`, seperti dibawah ini
+Karena akses menuju web server hanya pada saat jam kerja, maka dari itu kita dapat menggunakan `--timestart 07:00` untuk memulai dan `--timestop 16:00` untuk mengakhiri. Dan juga kita dapat membatasi hari dengan menggunakan `--weekdays`. Untuk menentukan bisa tidak nya web server diakses menggunakan `ACCEPT` dan `REJECT`pada Web Server (SSS dan Garden), seperti dibawah ini
 
 ```
 iptables -A INPUT -m time --timestart 07:00 --timestop 16:00 --weekdays Mon,Tue,Wed,Thu,Fri -j ACCEPT
 iptables -A INPUT -j REJECT
 ```
+
+testing: ping IP Web Server (192.202.0.18 atau 192.202.0.19) pada hari dan jam ACCEPT dan oada hari dan jam REJECT
 
 # SOAL 5
 ## Karena kita memiliki 2 Web Server, Loid ingin Ostania diatur sehingga setiap request dari client yang mengakses Garden dengan port 80 akan didistribusikan secara bergantian pada SSS dan Garden secara berurutan dan request dari client yang mengakses SSS dengan port 443 akan didistribusikan secara bergantian pada Garden dan SSS secara berurutan.
