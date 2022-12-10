@@ -32,7 +32,7 @@ Pada pembagian ini, terdapat 8 subnet dimulai dari A1-A8. Selanjutnya, kita dapa
 <br>
 
 <p align="center">
-  <img src="img/perhintungan.png" width="600">
+  <img src="img/perhitungan.png" width="600">
 </p><br>
 Selanjutnya, mengitung pembagian IP dengan membuat tree.
 
