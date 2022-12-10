@@ -28,7 +28,7 @@ apt-get update
 apt-get install bind9 -y
 ```
 
-### Wise:
+### WISE:
 ```
 apt-get update
 apt-get install isc-dhcp-server -y
