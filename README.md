@@ -22,7 +22,7 @@
 - Jumlah Host pada Blackbell adalah 255 host
 - Jumlah Host pada Briar adalah 200 host
 
-### DNS Server:
+### Eden:
 ```
 apt-get update
 apt-get install bind9 -y
