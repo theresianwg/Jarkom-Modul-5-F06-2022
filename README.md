@@ -334,9 +334,31 @@ iptables -A PREROUTING -t nat -p tcp --dport 443 -d 192.202.0.19 -j DNAT --to-de
 ## Karena Loid ingin tau paket apa saja yang di-drop, maka di setiap node server dan router ditambahkan logging paket yang di-drop dengan standard syslog level.
 
 ### Jawab :
+Untuk melakukan logging paket yang di-drop, maka pada Strix ditambahkan script sebagai berikut,
+```
+# logging
+iptables -N LOGGING
+iptables -A INPUT -j LOGGING
+iptables -A OUTPUT -j LOGGING
+iptables -A LOGGING -m limit --limit 2/min -j LOG --log-prefix "IPTables-Dropped: " --log-level 4
+#iptables -A LOGGING -j DROP
+
+# rsyslog
+echo '
+kern.warning /var/log/iptables.log
+' >> /etc/rsyslog.conf
+
+# rsyslog restart
+/etc/init.d/rsyslog restart
+```
+sehingga akan ditampilkan
+<p align="center">
+  <img src="img/nomor6.jpg" width="600">
+</p><br>
 
 ## Kendala :
 - Soal no 5 tidak dapat menyambungkan curl saat testing
+- Soal no 6 tidak dapat memunculkan log
 
 
 
